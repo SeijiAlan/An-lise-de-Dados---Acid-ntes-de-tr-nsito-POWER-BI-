@@ -1,39 +1,45 @@
-# Análise de Dados - Acidentes de trânsito (RENAEST).
+# Análise de Dados - Acidentes de Trânsito (RENAEST)
+
 Este projeto tem como objetivo analisar dados públicos de acidentes de trânsito disponibilizados pela Secretaria Nacional de Trânsito (SENATRAN), por meio da base do Registro Nacional de Acidentes e Estatísticas de Trânsito (RENAEST).
 
 A análise foi desenvolvida no Power BI com foco na construção de indicadores confiáveis e na validação da consistência dos dados antes da geração de insights.
 
-🎯 Objetivo
-Calcular o total de acidentes no período de 2018 a 2025,
-Identificar o total de óbitos,
-Identificar o total de feridos/ilesos,
-Calcular a taxa média de mortalidade por ocorrência,
-Validar a integridade da base antes da análise.
+## 🎯 Objetivo
+* Calcular o total de acidentes no período de 2018 a 2025.
+* Identificar o total de óbitos.
+* Identificar o total de feridos/ilesos.
+* Calcular a taxa média de mortalidade por ocorrência.
+* Validar a integridade da base antes da análise.
 
-💻 Ferramentas Utilizadas
-Power BI,
-DAX (Data Analysis Expressions),
-Base pública do RENAEST.
+## 💻 Ferramentas Utilizadas
+* **Power BI**
+* **DAX** (Data Analysis Expressions)
+* **Base pública do RENAEST**
 
-🧠Etapa de Validação dos Dados.
-1.Antes de criar os indicadores, foi feita uma verificação da estrutura da base:
-2.Confirmou-se que cada linha representa uma ocorrência individual
-3.Atestou-se que a coluna qtde_acidente possui valor máximo igual a 1
-4.Utilizou-se DISTINCTCOUNT no identificador do acidente para evitar duplicidades
-5.Verificada a ausência de valores nulos relevantes na chave da ocorrência
-6.Essa etapa foi essencial para garantir que os resultados não estivessem inflados por duplicações ou agregações indevidas.
+## 🧠 Etapa de Validação dos Dados
+Antes de criar os indicadores, foi feita uma verificação rigorosa da estrutura da base:
+1. Confirmou-se que cada linha representa uma ocorrência individual.
+2. Atestou-se que a coluna `qtde_acidente` possui valor máximo igual a 1.
+3. Utilizou-se `DISTINCTCOUNT` no identificador do acidente para evitar duplicidades.
+4. Verificada a ausência de valores nulos relevantes na chave da ocorrência.
 
-📌 Métricas Desenvolvidas
-O Arquivo utilizado está disponível no endereço:https://dados.transportes.gov.br/dataset/renaest? e o arquivo utilizado foi o "RENAEST-Mensal-10-2025". 
+Essa etapa foi essencial para garantir que os resultados não estivessem inflados por duplicações ou agregações indevidas.
 
-Sobre a tabela "Vitimas_DadosAbertos_20260212", a coluna relacionada a chave da ocorrência foi nomeada para "Código_acidente"
-Foram utilizadas as seguintes medidas (Consultas DAX):
+## 📌 Métricas Desenvolvidas
+O arquivo utilizado foi o **"RENAEST-Mensal-10-2025"**, disponível em: [Dados Transportes Gov](https://dados.transportes.gov.br/dataset/renaest).
 
-1.Total de ocorrências:
-Quantidade de ocorrências =
+> **Nota de Modelagem:** Na tabela `Vitimas_DadosAbertos_20260212`, a chave da ocorrência foi renomeada para `Código_acidente`.
+
+### Consultas DAX (Medidas)
+
+**1. Total de Ocorrências:**
+```dax
+Quantidade de ocorrências = 
 DISTINCTCOUNT(Acidentes_DadosAbertos_20260212[Código_acidente])
 
-2.Cálcular o Estado com maior Nº de ocorrências (Estático):
+2. Estado com maior Nº de ocorrências (Estático):
+Snippet de código
+
 Estado com maior Nº de acidentes = 
 VAR TabelaResumo =
     SUMMARIZE(
@@ -52,7 +58,9 @@ VAR Maior =
 RETURN
     MAXX(Maior, Vitimas_DadosAbertos_20260212[uf_acidente])
 
-3.Estado com maior Nº de Frota circulante:
+3. Estado com maior Nº de Frota circulante:
+Snippet de código
+
 Estado c/ maior frota circulante = 
 VAR TabelaResumo =
     SUMMARIZE(
@@ -71,12 +79,11 @@ VAR Maior =
 RETURN
     MAXX(Maior, Localidade_DadosAbertos_20260212[uf])
 
-  4.Quantidade de ocorrências = 
-DISTINCTCOUNT(Acidentes_DadosAbertos_20260212[Código_acidente])
+4. Validação de Granularidade:
+Utilizou-se a seguinte medida para confirmar que cada linha da tabela de acidentes representa apenas 1 ocorrência:
+Snippet de código
 
-Além disso, devido a granda quantidade de dados presentes nas tabelas, utilizou-se a seguinte medida para confirmar que cada ocorrência está relacionada a 1 acidente: 
-
-Valor Máximo Qtde =
+Valor Máximo Qtde = 
 MAX(Acidentes_DadosAbertos_20260212[qtde_acidente])
 
 
